@@ -1,0 +1,10 @@
+playwright == 1.55.0
+wolf-cybersecurity-toolkit == 0.1.0
+pytest-playwright-asyncio == 0.7.1
+matplotlib == 3.10.7
+pandas == 2.3.3
+pytest == 8.4.2
+aiomysql == 0.2.0
+aiodns == 3.5.0
+pytest-asyncio == 1.2.0
+pyperclip == 1.11.0
