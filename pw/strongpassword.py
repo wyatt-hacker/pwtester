@@ -1,16 +1,11 @@
 import re
-import tkinter
-"""Im thinking i want to break apart the regex into the seperate checkers just for better readability
-| 16 character min, no simple passwords, includes number, special character, 
- I also want a strong password to be saved to the clipboard | pyperclip
- Finding a library for graphical ui would be useful | tkinter
- I want to put in secure coding practices for cleaning the input
- """
+import pyperclip
 
-class checkStrongPassword(input):
+class checkStrongPassword():
     # Make regex for strong password
     #Grab input and compare against
     # Return input on if     
+    
     def __init__(self):
         #
         self.pattern_special_characters = re.compile(r'[!@#$%^&*()_+\-=\[\]{};\':"\\|,.<>\/?]')
@@ -19,59 +14,86 @@ class checkStrongPassword(input):
         self.common_words = ['password', 'admin', 'qwerty', 'letmein', 'welcome', 
                 'monkey', 'dragon', 'master', 'hello', 'freedom',
                 'whatever', 'computer', 'internet', 'sunshine']
+        self.validated_password = None
 
-    def sanitizePassword(input):
+    def getPassword(self):
         #if password empty, convert input to str
-        if input is None:
+        password = input("Enter Password Here ")
+        if password is None:
             print('You must enter a password!? Duh')
 
-        if not isinstance(input, str):
+        if not isinstance(password, str):
             try:
-                password_input = str(input)
+                password = str(password)
             except (UnicodeEncodeError, TypeError):
                 return("You tryna hack me? Do it again with normal characters!")
- 
-    def check_length(input):
-        if len(input) >= 16:
-            continue
         else:
-            print("Password not long enough reach 16 characters")
+             return password 
+ 
+    def validate_password(self,password,min_length=3):
+        errors = []
+        if len(password) < 16:
+            errors.append("Password not long enough try to reach 16 characters")
+            
+        if  not self.pattern_capital_letters.search(password):
+            errors.append("Include atleast one Capital Letter")
 
-    def find_all_sequential_numbers(input, min_length=3):
-        """
-        Find all sequential numbers and return red x if anyfound
-        """
-        sequences_found = [] # Do non empty list return True?
+            
+        if self.pattern_repeating_numbers.search(password):
+            errors.append("Remove the repeating numbers from your password")
 
+            
+        if not self.pattern_special_characters.search(password):
+            errors.append("Include atleast one special character")
+
+            
         i = 0 
-        while i < len(input) - (min_length - 1):
+        while i < len(password) - (min_length - 1):
             # Find biggest slice starting at i
-            max_possible_length = min(10, len(input) - i) 
+            max_possible_length = min(10, len(password) - i) 
 
-            for seq_length in range(min_lenght, max_possible_length + 1):
-                current_slice = password[i:i + seq_length] # I think we remove the 1 so wehen we have it follow an i theres no out of bounds issue
+            for seq_length in range(min_length, max_possible_length + 1):
+                current_slice = password[i:i + seq_length] 
 
                 if not current_slice.isdigit():
                     continue
                 # At this point if a slice exists is shoud be identified, then we test for 
                 # sequential numbers
-                is_ascending = True
-                for j in range(seq_len - 1):
-                    if int(curent_slice[j+1]) != int(current_slice[j]) + 1:
-                        is_ascending = False
-                        break
+                    is_ascending = True
+                    for j in range(seq_length - 1):
+                        if int(current_slice[j+1]) != int(current_slice[j]) + 1:
+                            errors.append("Remove sequential numbers ie 123 456 789")
+                            is_ascending = False
+                            break
+                    is_descending = True
+                    for j in range(seq_length - 1):
+                        if int(current_slice[j+1]) != int(current_slice) - 1:
+                            errors.append("Remove sequential numbers ie 321 654 987")
+                            is_descending = False
+                            break
+                
+                if is_ascending or is_descending:
+                    errors.append("Remove sequential numbers 123, 321, ie")
+                    break
+                i += 1
+    
+            if errors:
+                print("Errors Found")
+                for error in errors:
+                    print(f" - {error}")
+                return None
+            else:
+                print("Password is secure")
+                self.validated_password = password
+                return password
 
-                is_descending = False
-                for j in range(seq_length - 1):
-                    if int(current_slice[j+1]) != int(current_slice) - 1:
-                        is_descending = False
-                        break
 
-            if is_ascending or is_descending:
-                print("No sequential numbers allowed ie, 123 or 321")
 
-        return True
 
+    def savetoClipboard(self):
+        if self.validated_password:
+            pyperclip.copy(self.validated_password)
+            print("Password saved to Clipboard")
 
 
                 
