@@ -2,10 +2,7 @@ import re
 import pyperclip
 
 class checkStrongPassword():
-    # Make regex for strong password
-    #Grab input and compare against
-    # Return input on if     
-    
+ 
     def __init__(self):
         #
         self.pattern_special_characters = re.compile(r'[!@#$%^&*()_+\-=\[\]{};\':"\\|,.<>\/?]')
@@ -86,9 +83,6 @@ class checkStrongPassword():
                 print("Password is secure")
                 self.validated_password = password
                 return password
-
-
-
 
     def savetoClipboard(self):
         if self.validated_password:
